@@ -9,6 +9,14 @@ in the `apps/web` directory, which uses shared components from the `@repo/ui` pa
 
 The goal of this repository is to provide an up-to-date starter for vite-react.
 
+## Usage with Create-Turbo
+
+To bootstrap a new project from this example, run:
+
+```bash
+yarn dlx create-turbo@latest --package-manager yarn --example https://github.com/alexneamtu/turborepo-yarn-vite-shadcn-ui
+```
+
 ### Prerequisites
 
 Make sure you have the following installed:
@@ -48,5 +56,4 @@ Make sure you have the following installed:
    ```bash
    yarn ui card
    ```
-
 Enjoy working with your new Turborepo starter kit and feel free to raise a PR! 🎉

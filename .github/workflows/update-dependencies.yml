@@ -1,0 +1,60 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Volta
+        run: |
+          curl https://get.volta.sh | bash
+          echo "$HOME/.volta/bin" >> $GITHUB_PATH
+
+      - name: Install Node.js with Volta
+        run: volta install node
+
+      - name: Set Yarn version
+        run: |
+          echo "YARN_VERSION=$(jq -r '.packageManager' package.json | awk -F'@' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Install Yarn using Volta
+        run: volta install yarn@${{ env.YARN_VERSION }}
+
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/unplugged
+            .yarn/build-state.yml
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Update dependencies
+        run: yarn up -R
+
+      - name: Build
+        run: yarn build
+
+      - name: Commit and push changes
+        if: success()
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff-index --quiet HEAD || git commit -m "chore: update dependencies"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

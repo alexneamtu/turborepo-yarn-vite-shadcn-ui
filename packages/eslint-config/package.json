@@ -1,0 +1,15 @@
+{
+  "name": "@repo/eslint-config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./eslint.react": "./eslint.react.js",
+    "./eslint.node": "./eslint.node.js"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0"
+  }
+}
